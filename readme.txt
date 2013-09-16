@@ -1,6 +1,6 @@
 === Education Website ===
 Contributors: brabbins
-Version: 1.0.1
+Version: 2
 Donate link: n/a
 Tags: custom
 Requires at least: 3.5
@@ -17,7 +17,7 @@ Adds the Faculty of Education settings and options
 1. Faculty of Education Style
 1. Background Texture
 1. Department/ Unit Header
-1. Circled Featured Images for pages. Find out more.
+1. Circled Featured Images for pages. Find out more on clf.educ.ubc.ca.
 1. Back to Top link
 
 == Installation ==
@@ -40,3 +40,14 @@ So far.
 
 = 1.0 =
 * Upload.
+
+= 2.0 =
+* Refined sidenav and top navigation styles
+* Refined the CSS for smaller file size
+* Added CSS colours for text and backgrounds
+* Added parent and category slugs as css classes in the body tag
+
+ == Upgrade Notice == 
+= 2.0 =
+Updates and enhances plugin
+
