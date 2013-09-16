@@ -465,7 +465,6 @@ Class UBC_Education_Theme_Options {
 #ubc7-unit-alternate-navigation .nav > li.current-menu-parent > .btn-group,
 #ubc7-unit-menu .nav > li.current-post-parent > a,
 #ubc7-unit-alternate-navigation .nav > li.current-post-parent > a,
-#ubc7-unit-menu .nav > li.current-menu-parent a,
 #ubc7-unit-alternate-navigation .nav > li.current-menu-parent a,
 #ubc7-unit-menu .dropdown .btn-group:hover .btn,
 #ubc7-unit-alternate-navigation .dropdown .btn-group:hover .btn,
