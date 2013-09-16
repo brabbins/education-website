@@ -4,7 +4,7 @@
   Plugin Name: UBC Education Website
   Plugin URI:  http://educ.ubc.ca
   Description: Transforms the UBC Collab Theme into an Education website | Note: This plugin will only work on wp-hybrid-clf theme
-  Version: 1.0.1
+  Version: 2
   Author: Amir Entezaralmahdi | Arts ISIT & David brabbins
   Licence: GPLv2
   Author URI: http://educ.ubc.ca
@@ -59,7 +59,19 @@ Class UBC_Education_Theme_Options {
 		add_filter('wp-hybrid-clf_before_content', array(__CLASS__,'output_foe_featured_img'), 11, 3);
 		//Add FOE Back to top link
 		add_action('wp-hybrid-clf_after_content', array(__CLASS__, 'output_back_to_top') , 10);
+		//Adds parent slug as class to body tag
+		function parent_slug_body_class ( $classes ){
+		if( is_page() ) {
+			 global $post;
+			 $parent = get_page($post->post_parent);
+			 array_push( $classes, "{$post->post_type}-{$post->post_name}" );
+			 array_push( $classes, "{$post->post_type}-parent-{$parent->post_name}" );
+			 }
+		return $classes;
+		}
+		add_filter( 'body_class', 'parent_slug_body_class' );
     }
+	
     
     /**
      * foe_uploader_options_enqueue_scripts function.
@@ -266,6 +278,7 @@ Class UBC_Education_Theme_Options {
             <li>Faculty of Education Style</li>
             <li>Department/ Unit Header</li>
             <li>Circled <strong>Featured Images</strong> for pages. <a href="http://clf.educ.ubc.ca/features/featured-images/" target="_blank">Find out more.</a></li>
+            <li>Body classes based on partent and category slugs. <a href="http://clf.educ.ubc.ca/features/featured-images/" target="_blank">Find out more.</a><</li>
             <li>Back to Top link</li>
           </ol>
         </div>
@@ -366,10 +379,12 @@ Class UBC_Education_Theme_Options {
 
 	function faculty_plugin_before_header_widget(){ ?>
     
-            <div id="dept-brand" class=" row-fluid expand">
-                 <div id="department-logo" class="row-fluid">
-                   <a title="<?php echo get_bloginfo() ?>"  href="<?php echo get_bloginfo('url') ?>"><?php echo get_bloginfo() ?></a>
-               </div>
+            <div class="brand-container expand">
+                <div id="dept-brand" class="row-fluid expand dept-brand">
+                     <div id="department-logo" class="row-fluid department-logo">
+                       <a title="<?php echo get_bloginfo() ?>"  href="<?php echo get_bloginfo('url') ?>"><?php echo get_bloginfo() ?></a>
+                   </div>
+                </div>
             </div>
        <?php
                 }
@@ -407,6 +422,9 @@ Class UBC_Education_Theme_Options {
 		<!-- Back to Top End --> 
 		";
      }
+	 
+
+
 					
       /**
      * wp_head
@@ -417,8 +435,76 @@ Class UBC_Education_Theme_Options {
                 #ubc7-unit {
 				 background: #002145 !important;
 				}
-				#ubc7-unit-menu .nav-collapse .nav > li > a:hover, #ubc7-unit-menu .nav > li.active > a:hover, #ubc7-unit-menu .nav-collapse .dropdown-menu a:hover, #ubc7-unit-menu .btn-group:hover .btn, #ubc7-unit-menu .nav > li.active > .btn-group:hover .btn, #ubc7-unit-menu .nav > li.active > a, #ubc7-unit-menu .nav > li.active > .btn-group, #ubc7-unit-menu .current-menu-ancestor, .current-menu-parent, #ubc7-unit-menu .current-page-parent, .current_page_parent, #ubc7-unit-menu .current-page-ancestor, #ubc7-unit-menu .nav > li.current-page-ancestor > a, #ubc7-unit-menu .nav > li.current-page-ancestor .btn-group > a, #ubc7-unit-menu .nav > li.current-page-ancestor.dropdown .btn-group button,  .sidenav a:hover,  .accordion.sidenav .single a.opened,  .accordion.sidenav .single a.opened:hover,  .sidenav .accordion-heading .accordion-toggle:hover,  .sidenav .accordion-group .accordion-inner>a.opened,  .sidenav .accordion-heading:hover,  .sidenav .accordion-heading a:hover,  .sidenav .accordion-heading:hover a:focus,  .sidenav .accordion-heading:hover a:active,  .sidenav .accordion-heading:hover .accordion-toggle,  .simple-custom-menu .active a,  .simple-custom-menu a:hover,  .carousel-caption {
-				 background: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>!important;
+		/*-- Top Navigation forced importants !importants ---------------------------*/
+				/*-- Top Navigation Hovers ---------------------------*/
+				#ubc7-unit-menu .nav-collapse .nav>li>a:hover, #ubc7-unit-menu .nav-collapse .dropdown-menu a:hover, #ubc7-unit-alternate-navigation .nav-collapse .nav>li>a:hover, #ubc7-unit-alternate-navigation .nav-collapse .dropdown-menu a:hover {
+				background: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>!important;
+				}
+				#ubc7-unit-menu .btn-group button:hover, #ubc7-unit-alternate-navigation .btn-group button:hover {
+				 background: <?php echo UBC_Collab_Theme_Options::get('education-main-colour')?>!important;	
+				}
+		/*-- Top Navigation  ---------------------------*/
+				/*-- Top Navigation Current pages ---------------------------*/
+#ubc7-unit-menu .nav > li.active > a,
+#ubc7-unit-alternate-navigation .nav > li.active > a,
+#ubc7-unit-menu .nav > li.active > .btn-group > a,
+#ubc7-unit-alternate-navigation .nav > li.active > .btn-group > a,
+#ubc7-unit-menu .nav > li.current-page-ancestor > a,
+#ubc7-unit-alternate-navigation .nav > li.current-page-ancestor > a,
+#ubc7-unit-menu .nav > li.current-post-parent > a,
+#ubc7-unit-alternate-navigation .nav > li.current-post-parent > a,
+#ubc7-unit-menu .nav > li.current-page-ancestor .btn-group > a,
+#ubc7-unit-alternate-navigation .nav > li.current-page-ancestor .btn-group > a,
+#ubc7-unit-menu .nav > li.current-post-parent .btn-group > a,
+#ubc7-unit-alternate-navigation .nav > li.current-post-parent .btn-group > a,
+#ubc7-unit-menu .nav > li.active > .btn-group,
+#ubc7-unit-alternate-navigation .nav > li.active > .btn-group,
+#ubc7-unit-menu .nav > li.current-page-ancestor > .btn-group,
+#ubc7-unit-alternate-navigation .nav > li.current-page-ancestor > .btn-group,
+#ubc7-unit-menu .nav > li.current-menu-parent > .btn-group,
+#ubc7-unit-alternate-navigation .nav > li.current-menu-parent > .btn-group,
+#ubc7-unit-menu .nav > li.current-post-parent > a,
+#ubc7-unit-alternate-navigation .nav > li.current-post-parent > a,
+#ubc7-unit-menu .nav > li.current-menu-parent a,
+#ubc7-unit-alternate-navigation .nav > li.current-menu-parent a,
+#ubc7-unit-menu .dropdown .btn-group:hover .btn,
+#ubc7-unit-alternate-navigation .dropdown .btn-group:hover .btn,
+#ubc7-unit-menu .dropdown .btn-group:hover .dropdown-toggle,
+#ubc7-unit-alternate-navigation .dropdown .btn-group:hover .dropdown-toggle,
+#ubc7-unit-menu .current-page-ancestor .btn-group .btn,
+#ubc7-unit-alternate-navigation .current-page-ancestor .btn-group .btn,
+#ubc7-unit-menu .current-menu-parent .btn-group .btn,
+#ubc7-unit-alternate-navigation .current-menu-parent .btn-group .btn,
+#ubc7-unit-menu .current-post-parent .btn-group .btn,
+#ubc7-unit-alternate-navigation .current-post-parent .btn-group .btn {
+  background: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>;
+}				
+				/*-- Top Navigation Hovers ---------------------------*/
+				#ubc7-unit-alternate-navigation .nav>li.active>.btn-group:hover .btn, #ubc7-unit-alternate-navigation .dropdown .btn-group:hover .btn, #ubc7-unit-alternate-navigation .dropdown .btn-group:hover .dropdown-toggle, #ubc7-unit-menu .nav>li.active>.btn-group:hover .btn {
+					background: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>;
+				}
+		/*-- Sidebar Navigation  ---------------------------*/
+				/*-- Current Pages  ---------------------------*/
+				.sidenavigation .accordion-group .accordion-heading.active, .sidenavigation .accordion-group .accordion-heading.active a, .sidenavigation .accordion-group .accordion-heading.active .accordion-toggle, .accordion.sidenav .single a.opened, .simple-custom-menu a .current-post-ancestor a, .simple-custom-menu .current-menu-parent a, .simple-custom-menu.current-post-parent a, .simple-custom-menu .active a, .sidenav .accordion-group .accordion-inner>a.opened, .sidenav .accordion>a.opened {
+				 background: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>;	
+				}
+				/*-- Hover Pages  ---------------------------*/
+				.sidenav .single a:hover, .simple-custom-menu.sidenav .menu-item a:hover, .sidenav .accordion-inner a:hover, .sidenav .single a:hover, .simple-custom-menu.sidenav .menu-item a:hover, .sidenav .accordion-inner a:hover  {
+				 background: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>;	
+				}
+				.sidenav .accordion-heading:hover, .sidenav .accordion-heading a:hover, .sidenav .accordion-heading:hover a:focus, .sidenav .accordion-heading:hover a:active, .sidenav .accordion-heading:hover .accordion-toggle {
+				background: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>!important;	
+				}
+				.sidenav .accordion-heading .accordion-toggle:hover {
+				 background: <?php echo UBC_Collab_Theme_Options::get('education-main-colour')?>!important;	
+				}
+	/*-- Accordion Hover  ---------------------------*/
+				.accordion-heading a:hover, .accordion-heading a:active, .accordion-heading a:focus {
+				 background: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>;	
+				}
+	/*-- Slider  ---------------------------*/
+				#ubc7-carousel .carousel-caption, .ubc-carousel .carousel-caption {
+					 background: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>;					
 				}
 				h1,  h2,  h3,  h4,  h5,  h6,  #content .hero-unit h1,  #frontpage-siderbar .tab-pane a,  a {
 				 color: <?php echo UBC_Collab_Theme_Options::get('education-main-colour')?>;
@@ -426,11 +512,14 @@ Class UBC_Education_Theme_Options {
 				a:hover {
 				 color: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>;
 				}
-				.sidenav {
+				.sidenav.accordion {
 				 border: 0;
-				 border-bottom: 10px solid <?php echo UBC_Collab_Theme_Options::get('education-main-colour')?>!important;
+				 border-bottom: 10px solid <?php echo UBC_Collab_Theme_Options::get('education-main-colour')?>;
 				}
-				#dept-brand {
+				.brand-container {
+				 background: <?php echo UBC_Collab_Theme_Options::get('education-main-colour')?>;
+				}
+				.dept-brand {
 				 background: <?php if (UBC_Collab_Theme_Options::get( 'education-enable-banner') == '1') {
 				 echo 'url(' . UBC_Collab_Theme_Options::get('foe-banner-image'). ') ';
 				}
@@ -439,20 +528,20 @@ Class UBC_Education_Theme_Options {
 				}
 				?><?php echo UBC_Collab_Theme_Options::get('education-main-colour')?>;
 				}
-				#department-logo {
+				.department-logo {
 				 background-image: url(<?php echo UBC_Collab_Theme_Options::get('foe-chevron-image-regular')?>);
 				}
 				ul.nav-tabs li a {
-				 background: <?php echo UBC_Collab_Theme_Options::get('education-main-colour')?>!important;
-				 border-color: <?php echo UBC_Collab_Theme_Options::get('education-main-colour')?>!important;
+				 background: <?php echo UBC_Collab_Theme_Options::get('education-main-colour')?>;
+				 border-color: <?php echo UBC_Collab_Theme_Options::get('education-main-colour')?>;
 				}
 				ul.nav-tabs li.active a {
-				 background: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>!important;
-				 border-color: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>!important;
+				 background: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>;
+				 border-color: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>;
 				}
 				ul.nav-tabs>li>a:hover {
-				 background: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>!important;
-				 border-color: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>!important;
+				 background: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>;
+				 border-color: <?php echo UBC_Collab_Theme_Options::get('education-gradient-colour')?>;
 				}
 				 @media(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
 					#department-logo {
